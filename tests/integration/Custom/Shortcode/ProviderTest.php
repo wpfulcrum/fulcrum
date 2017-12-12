@@ -78,7 +78,7 @@ class ProviderTest extends IntegrationTestCase
     {
         $provider = new ShortcodeProvider($this->fulcrumMock);
 
-        include_once __DIR__ . '/stubs/FooShortcode.php';
+        include_once __DIR__ . '/Stubs/FooShortcode.php';
 
         // Mock Fulcrum's registerConcrete, which would store it in the Container and return the instance.
         $concrete = $provider->getConcrete(FooShortcode::$concreteConfig, 'shortcode.fooStub')['concrete'];
