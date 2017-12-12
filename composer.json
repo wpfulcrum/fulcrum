@@ -21,7 +21,7 @@
         },
         "files": [
             "src/Config/api.php",
-            "src/Foundation/utility/helpers.php",
+            "src/Foundation/Utility/helpers.php",
             "src/Extender/module.php",
             "src/Extender/Arr/api.php",
             "src/Extender/Str/api.php"
