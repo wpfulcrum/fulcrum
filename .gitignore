@@ -1,0 +1,6 @@
+vendor
+logs
+reports
+node_modules
+tests/config/env/
+composer.lock

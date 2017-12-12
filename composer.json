@@ -1,0 +1,68 @@
+{
+    "name": "wpfulcrum/fulcrum",
+    "description": "Fulcrum - The central custom repository for WordPress.",
+    "type": "library",
+    "keywords": ["wordpress", "wordpress-plugin"],
+    "homepage": "https://github.com/wpfulcrum/fulcrum",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/wpfulcrum/fulcrum/issues",
+        "source": "https://github.com/wpfulcrum/fulcrum"
+    },
+    "authors": [
+        {
+            "name": "Tonya Mork",
+            "email": "hello@hellofromtonya.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Fulcrum\\": "src/"
+        },
+        "files": [
+            "src/Config/api.php",
+            "src/Foundation/utility/helpers.php",
+            "src/Extender/module.php",
+            "src/Extender/Arr/api.php",
+            "src/Extender/Str/api.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Fulcrum\\Tests\\Integration\\": "tests/integration/",
+            "Fulcrum\\Tests\\Unit\\": "tests/unit/"
+        }
+    },
+    "require": {
+        "php": "^5.6|^7",
+        "pimple/pimple" : "^3.2"
+    },
+    "require-dev": {
+        "brain/monkey": "^2.0",
+        "mockery/mockery": "~0.9",
+        "phpunit/phpunit": "~4.8|~5.7.9",
+        "squizlabs/php_codesniffer": "^3.0",
+        "sensiolabs/security-checker": "^4.0"
+    },
+    "replace": {
+        "wpfulcrum/config": "self.version",
+        "wpfulcrum/container": "self.version",
+        "wpfulcrum/extender": "self.version",
+        "wpfulcrum/foundation": "self.version",
+        "wpfulcrum/post-type": "self.version",
+        "wpfulcrum/shortcode": "self.version",
+        "wpfulcrum/taxonomy": "self.version",
+        "wpfulcrum/template": "self.version",
+        "wpfulcrum/widget": "self.version"
+    },
+    "config": {
+        "sort-order": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "scripts": {
+        "phpcs": "\"vendor/bin/phpcs\"",
+        "test-unit": "\"vendor/bin/phpunit\" --testsuite unit",
+        "test-integration": "\"vendor/bin/phpunit\" --testsuite integration --configuration tests/integration/phpunit.xml.dist"
+    }
+}
