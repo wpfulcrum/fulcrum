@@ -1,217 +1,57 @@
-# Post Type Module
+# Fulcrum
 
-[![Build Status](https://travis-ci.org/wpfulcrum/post-type.svg?branch=develop)](https://travis-ci.org/wpfulcrum/post-type) 
-[![Latest Stable Version](https://poser.pugx.org/wpfulcrum/post-type/v/stable)](https://packagist.org/packages/wpfulcrum/post-type) 
-[![License](https://poser.pugx.org/wpfulcrum/post-type/license)](https://packagist.org/packages/wpfulcrum/post-type)
+[![Build Status](https://travis-ci.org/wpfulcrum/fulcrum.svg?branch=develop)](https://travis-ci.org/wpfulcrum/fulcrum) 
+[![Latest Stable Version](https://poser.pugx.org/wpfulcrum/fulcrum/v/stable)](https://packagist.org/packages/wpfulcrum/fulcrum) 
+[![License](https://poser.pugx.org/wpfulcrum/fulcrum/license)](https://packagist.org/packages/wpfulcrum/fulcrum)
 
-The Fulcrum Custom Post Type Module makes your job easier for adding custom post types to your project. Pass it a configuration and it handles the rest for you.
+Fulcrum - The customization central repository to extend and custom WordPress. This plugin provides the centralized infrastructure for the custom plugins and theme.
 
-## Features
+### The Why of Customization Central
+This plugin provides a central location for all redundant functionality.  It keeps your plugins and theme DRY, reusable, and modular.  It is meant to be extended.  Therefore, when you need a feature-specific plugin like a Portfolio, Testimonials, or FAQ, you extend the `Fulcrum\Addon\Addon` class in your plugin.  Then you configure what service providers you need.
 
-- Registration is handled for you.
-- Label generation - handy when you do not need internationalization.
-- Supported features builder - handy when you want the supports that other plugins and/or the theme adds.
-- Stores in Fulcrum's Container - when added, automatically stores it in the Container for global usage.
-- Column filtering, sorting, and configuration are all handled for you.
+Did you read that last part?  It's configuration over code, meaning you configure what you want! (Did you get a tingle?)
+
+Bottom Line: It saves you a ton of time and code in your plugins, which saves you moola.
+
+### Features
+This plugin is fully crafted in OOP.  It utilizes [DI Container](http://pimple.sensiolabs.org/), Dependency Injection, Polymorphism, Inheritance, etc.  It shows you how to build OOP-capable plugins.
+
+It also uses:
+* Composer and its autoload functionality in place of filling a function with includes and requires.
+* Gulp as it's task runner
+* Config files, which abstract the runtime configuration out of the modules and into `fulcrum/config` folder where they belong.
+* Service Providers for the Addons to utilize, which simply the need-to-know in the addons.  Configure and fire them up.
+ 
+Includes:
+* [Pimple](http://pimple.sensiolabs.org/) - as the DI Container
+* Shortcodes     
+* Meta boxes     
+* Custom Post Types  
+* Custom Taxonomy    
+* Widgets
+
+### Some Cool Packages
+Fulcrum includes some cool packages to make your job more fun.
+* [Kint](http://raveren.github.io/kint/) - a modern and powerful PHP debugging helper
+* [Whoops](http://filp.github.io/whoops/) - PHP Errors for Cook Kids
+* [Carbon](http://carbon.nesbot.com/) - A simple PHP API extension for DateTime.
+* [Pimple](http://pimple.sensiolabs.org/) - as the DI Container
 
 ## Installation
 
-The best way to use this component is through Composer:
+Installation from GitHub is as simple as cloning the repo onto your local machine.  Typically, I put Fulcrum as a must use plugin.  Why? Because the child theme and all custom plugins extend off of it.  Therefore, you want it to always be activated.
 
-```
-composer require wpfulcrum/post-type
-```
+To install it as a must use, here's what you want to do:
 
-## Dependencies
-
-This module requires:
- 
-- at least PHP 5.6
-- WordPress 4.8+
-
-## Configuring a Custom Post Type
-
-This module, as with all Fulcrum modules, is configuration driven as part of the ModularConfig design pattern.  In your theme/plugin's configuration folder, you will want to create a configuration file.  Here is the basic structure of that file:
-
-```
-<?php
-
-$config = [
-    'autoload' => true,
-    'postType' => 'book',
-    'config'   => [
-        'postTypeArgs'   => [],
-        'labelsConfig'   => [],
-        'supportsConfig' => [],
-        'columnsConfig'  => [],
-    ],
-];
-
-/**
- * Arguments Configuration Parameters
- *
- * @see https://codex.wordpress.org/Function_Reference/register_post_type#arguments for more details.
- *
- * Don't configure the label, labels, or supports here.  Those are handled separately below.
- */
-$config['config']['postTypeArgs'] = [
-    'description'  => 'Books - example custom post type',
-    'public'       => true,
-    'hierarchical' => false,
-    'show_in_rest' => true,
-    'has_archive'  => true,
-    'menu_icon'    => 'dashicons-book', // @link https://developer.wordpress.org/resource/dashicons
-];
-
-/**
- * Labels Builder - Configuration Parameters
- */
-$config['config']['labelsConfig'] = [
-
-    /***************************************************************************************************
-     * When Your Plugin Doesn't Need Internationalization:
-     *
-     * By default, the label builder automatically builds the labels for you using the plural and singular
-     * names you configure below.
-     **************************************************************************************************/
-    'useBuilder'   => true, // set to false when you need internationalization.
-    'pluralName'   => 'Books',
-    'singularName' => 'Book',
-
-    /***************************************************************************************************
-     * Specify the labels you want here.
-     *
-     * When not using the automatic builder (i.e. when 'useBuilder' is set to `false`), then you specify
-     * all the custom labels here.
-     *
-     * If you are using the builder, any labels you specify here will overwrite what the builder generates.
-     *
-     * @see https://codex.wordpress.org/Function_Reference/register_post_type#labels for more details.
-     **************************************************************************************************/
-    'labels'       => [
-        'name'               => _x('Books', 'post type general name', 'your-plugin-textdomain'),
-        'singular_name'      => _x('Book', 'post type singular name', 'your-plugin-textdomain'),
-        'menu_name'          => _x('Books', 'admin menu', 'your-plugin-textdomain'),
-        'name_admin_bar'     => _x('Book', 'add new on admin bar', 'your-plugin-textdomain'),
-        'add_new'            => _x('Add New', 'book', 'your-plugin-textdomain'),
-        'add_new_item'       => __('Add New Book', 'your-plugin-textdomain'),
-        'new_item'           => __('New Book', 'your-plugin-textdomain'),
-        'edit_item'          => __('Edit Book', 'your-plugin-textdomain'),
-        'view_item'          => __('View Book', 'your-plugin-textdomain'),
-        'all_items'          => __('All Books', 'your-plugin-textdomain'),
-        'search_items'       => __('Search Books', 'your-plugin-textdomain'),
-        'parent_item_colon'  => __('Parent Books:', 'your-plugin-textdomain'),
-        'not_found'          => __('No books found.', 'your-plugin-textdomain'),
-        'not_found_in_trash' => __('No books found in Trash.', 'your-plugin-textdomain'),
-    ],
-];
-
-/**
- * Post Type's Supported Features Builder - Configuration Parameters
- */
-$config['config']['supportsConfig'] = [
-
-    /***************************************************************************************************
-     * When you want only these specific supports, configure them here.
-     *
-     * @see https://codex.wordpress.org/Function_Reference/register_post_type#supports for more details.
-     **************************************************************************************************/
-    'supports'           => [
-        'title',
-        'editor',
-        'author',
-        'thumbnail',
-        'excerpt',
-        'comments',
-    ],
-
-    /***************************************************************************************************
-     * Want all or some of the supports that other plugins/theme add? Use this option instead.
-     *
-     * For example, let's say you want your custom post type to use the features that Yoast SEO, Genesis,
-     * or Beans add.  This option uses the "post" post type as its base to grab all of them. Cool, right?!
-     *
-     * Configure the post type support features you want to include (set to `true`) or exclude (set to `false`).
-     * You can add new ones too.  Then the builder handles it for you.
-     **************************************************************************************************/
-    'additionalSupports' => [
-        'title'           => true,
-        'editor'          => true,
-        'author'          => false,
-        'thumbnail'       => true,
-        'excerpt'         => true,
-        'trackbacks'      => false,
-        'custom-fields'   => false,
-        'comments'        => false,
-        'revisions'       => false,
-        'page-attributes' => false,
-        'post-formats'    => false,
-        'foo'             => true,
-        'bar'             => true,
-    ],
-];
-
-/**
- * Columns Handler - Configuration Parameters
- */
-$config['config']['columnsConfig'] = [
-    'columnsFilter' => [],
-    'columnsData'   => [],
-];
-
-return $config;
-
-```
-
-## Making It Work
-
-There are 2 ways to utilize this module:
-
-1. With the full [Fulcrum plugin](https://github.com/wpfulcrum/fulcrum).
-2. Or on its own without Fulcrum.
-
-### With Fulcrum
-
-In Fulcrum, your plugin is an Add-on.  In your plugin's configuration file, you will have a parameter for the `serviceProviders`, where you list each of the service providers you want to use.  In this case, you'll use the `provider.post_type`.  
-
-For example, using our Book configuration above, this would be the configuration:
-
-```
-	'serviceProviders' => [
-
-		/****************************
-		 * Custom Post Types
-		 ****************************/
-		'book.post_type' => array(
-			'provider' => 'provider.post_type', // this is the service provider to be used.
-			'config'   => BOOK_PLUGIN_DIR . 'config/post-type/book.php', // path to the book post type's configuration file.
-		),
-	],
-```
-
-[Fulcrum's Add-On Module](https://github.com/wpfulcrum/addon) handles flushing the rewrites upon plugin activation and deactivation.  That saves you time.
-
-### Without Fulcrum
-
-Without Fulcrum, you'll need to instantiate each of the dependencies and `PostType`.  For example, you would do:
-
-```
-$config = require_once BOOK_PLUGIN_DIR . 'config/post-type/book.php';  // path to the book post type's configuration file.
-
-$supportsConfig                 = $config['config']['supportsConfig'];
-$supportsConfig['hierarchical'] = $config['config']['postTypeArgs']['hierarchical'];
-
-$postType = new PostType(
-    $config['postType'],
-    ConfigFactory::create($config['config']['postTypeArgs']),
-    new Columns($config['postType'], ConfigFactory::create($config['config']['columnsConfig'])),
-    new SupportedFeatures(ConfigFactory::create($supportsConfig)),
-    new LabelsBuilder(ConfigFactory::create($config['config']['labelsConfig']))
-);
-$postType->register();    
-```
-
-You will need to handle flushing the rewrites with your plugin's activation and deactivation.
+1. Open your project and navigate to `wp-content/mu-plugins`.
+2. Then open terminal (or console).
+3. Then type: `git clone https://github.com/hellfromtonya/Fulcrum.git`.
+4. Change the directory by typing: `cd Fulcrum` or `cd fulcrum`.
+5. Next you need to run Composer to install all of the assets. Type `composer install` at the root of the Fulcrum folder.
+6. Next you need an autolauncher to load Fulcrum.  If one exists already, then add `include( 'fulcrum/bootstrap.php' );` into it.  Otherwise, do the following:
+    * Navigate to `fulcrum/mu-loader/` and copy the file `mu_autoloader.php`
+    * Paste it into the root of `wp-content/mu-plugins`.
+    * Bam, Fulcrum now loads itself up without you or your client needing to activate it.  WooHoo!
 
 ## Contributing
 
