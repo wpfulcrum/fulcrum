@@ -24,6 +24,24 @@ class TaxonomyTest extends IntegrationTestCase
     protected $config;
     protected $labelsMock;
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        set_current_screen('front');
+        update_option('posts_per_page', 3);
+        delete_option('rewrite_rules');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        // Making sure that we cleanup before we leave these tests.
+        unregister_post_type('book');
+        unregister_taxonomy('genre');
+    }
+
     public function setUp()
     {
         parent::setUp();

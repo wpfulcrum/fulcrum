@@ -12,18 +12,22 @@ use Mockery;
 
 class TemplateLoaderTest extends IntegrationTestCase
 {
-    protected static $bookId;
-    protected static $term;
+    protected static $config;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        $config = require __DIR__ . '/fixtures/book-genre.php';
-        new TemplateLoader(ConfigFactory::create($config['config']));
+        self::$config = require __DIR__ . '/fixtures/book-genre.php';
+    }
 
-        set_current_screen('front');
-        update_option('posts_per_page', 3);
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        // CYA to make sure we cleanup before we leave these tests.
+        unregister_post_type('book');
+        unregister_taxonomy('genre');
     }
 
     public function setUp()
@@ -31,56 +35,49 @@ class TemplateLoaderTest extends IntegrationTestCase
         parent::setUp();
 
         $this->set_permalink_structure('/%postname%/');
-    }
-
-    public function testShouldLoadPluginSingleTemplate()
-    {
-        delete_option('rewrite_rules');
-        register_post_type('book', ['public' => true]);
-
-        $bookId = self::factory()->post->create(['post_type' => 'book']);
-
-        $this->go_to(get_permalink($bookId));
-
-        $this->assertEquals(
-            __DIR__ . '/fixtures/templates/single-book.php',
-            apply_filters('template_include', 'single.php')
-        );
-
-        unregister_post_type('book');
-    }
-
-    public function testShouldLoadPluginArchiveTemplate()
-    {
         delete_option('rewrite_rules');
         register_post_type('book', [
             'has_archive' => true,
             'public'      => true,
         ]);
 
+        new TemplateLoader(ConfigFactory::create(self::$config['config']));
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        unregister_post_type('book');
+    }
+
+    public function testShouldLoadPluginSingleTemplate()
+    {
+        $bookId = self::factory()->post->create(['post_type' => 'book']);
+
+        $this->go_to(get_permalink($bookId));
+
+        $this->assertTrue(is_single());
+        $this->assertEquals(
+            __DIR__ . '/fixtures/templates/single-book.php',
+            apply_filters('template_include', 'single.php')
+        );
+    }
+
+    public function testShouldLoadPluginArchiveTemplate()
+    {
         self::factory()->post->create(['post_type' => 'book']);
 
         $this->go_to('/book/');
 
         $this->assertTrue(is_post_type_archive('book'));
-
         $this->assertEquals(
             __DIR__ . '/fixtures/templates/archive-book.php',
             apply_filters('template_include', 'archive.php')
         );
-
-        unregister_post_type('book');
     }
 
     public function testShouldLoadPluginTaxTemplate()
     {
-        delete_option('rewrite_rules');
-
-        // Register the post type.
-        register_post_type('book', [
-            'has_archive' => true,
-            'public'      => true,
-        ]);
         $bookId = self::factory()->post->create(['post_type' => 'book']);
 
         // Now register the taxonomy and term.
@@ -102,9 +99,6 @@ class TemplateLoaderTest extends IntegrationTestCase
             __DIR__ . '/fixtures/templates/taxonomy-genre.php',
             apply_filters('template_include', 'archive.php')
         );
-
-        // Clean-up
-        unregister_post_type('book');
         unregister_taxonomy('genre');
     }
 }

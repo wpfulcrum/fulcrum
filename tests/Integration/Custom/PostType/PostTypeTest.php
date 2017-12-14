@@ -24,6 +24,23 @@ class PostTypeTest extends IntegrationTestCase
     protected $labelsMock;
     protected $supportsMock;
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        set_current_screen('front');
+        update_option('posts_per_page', 3);
+        delete_option('rewrite_rules');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        // Making sure that we cleanup before we leave these tests.
+        unregister_post_type('book');
+    }
+
     public function setUp()
     {
         parent::setUp();

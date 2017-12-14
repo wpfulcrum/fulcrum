@@ -6,6 +6,24 @@ use Fulcrum\Tests\Integration\IntegrationTestCase;
 
 class HelpersTest extends IntegrationTestCase
 {
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        delete_option('rewrite_rules');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        // Making sure that we cleanup before we leave these tests.
+        unregister_post_type('foo');
+        unregister_post_type('extender_cpt');
+        unregister_taxonomy('extender_tax');
+        unregister_taxonomy('extender_footax');
+    }
+
     public function testShouldReturnNullWhenNoPostTypeSupports()
     {
         $this->assertEmpty(get_all_supports_for_post_type('foo'));
