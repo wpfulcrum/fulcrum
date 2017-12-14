@@ -1,0 +1,1 @@
+<p class="<?php echo $this->getClass(); ?>"><?php echo $this->content; ?></p>
