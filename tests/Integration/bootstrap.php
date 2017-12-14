@@ -59,5 +59,5 @@ function manually_load_plugin()
         \Fulcrum\Extender\autoloadWPFiles();
     }
 
-    require FULCRUM_TESTS_DIR . 'plugin.php';
+    require FULCRUM_ROOT_DIR . 'bootstrap.php';
 }
