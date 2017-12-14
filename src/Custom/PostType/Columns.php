@@ -242,9 +242,8 @@ class Columns implements ColumnsContract
             return;
         }
 
+        // add_filter( 'request', array( $this, 'sort_columns_by' ), 50 );
         add_filter("manage_edit-{$this->postType}_sortable_columns", [$this, 'makeColumnsSortable']);
-
-//		add_filter( 'request', array( $this, 'sort_columns_by' ), 50 );
     }
 
     /**

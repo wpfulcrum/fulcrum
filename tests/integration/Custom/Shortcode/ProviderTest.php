@@ -4,7 +4,7 @@ namespace Fulcrum\Tests\Integration\Custom\Shortcode;
 
 use Fulcrum\Custom\Shortcode\Shortcode;
 use Fulcrum\Custom\Shortcode\ShortcodeProvider;
-use Fulcrum\Tests\Integration\Custom\Shortcode\Stubs\FooShortcode;
+use Fulcrum\Tests\Integration\Custom\Shortcode\Stubs\Foo;
 use Fulcrum\Tests\Integration\IntegrationTestCase;
 use Mockery;
 
@@ -76,19 +76,24 @@ class ProviderTest extends IntegrationTestCase
 
     public function testShouldInvokeClassname()
     {
-        $provider = new ShortcodeProvider($this->fulcrumMock);
+        $provider  = new ShortcodeProvider($this->fulcrumMock);
 
-        include_once __DIR__ . '/Stubs/FooShortcode.php';
+        // Hmm, TravisCI keeps failing for not finding the stub. Let's just load it into memory here.
+        if (!class_exists('Fulcrum\Tests\Integration\Custom\Shortcode\Stubs\Foo')) {
+            require_once __DIR__ . '/Stubs/Foo.php';
+        }
+        $fooConfig = Foo::$concreteConfig;
 
         // Mock Fulcrum's registerConcrete, which would store it in the Container and return the instance.
-        $concrete = $provider->getConcrete(FooShortcode::$concreteConfig, 'shortcode.fooStub')['concrete'];
+        $concrete = $provider->getConcrete($fooConfig, 'shortcode.fooStub')['concrete'];
         $this->fulcrumMock
             ->shouldReceive('registerConcrete')
             ->andReturn($concrete());
 
         // Time to register.
-        $shortcode = $provider->register(FooShortcode::$concreteConfig, 'shortcode.fooStub');
-        $this->assertInstanceOf(FooShortcode::class, $shortcode);
+        $shortcode = $provider->register($fooConfig, 'shortcode.fooStub');
+        $this->assertInstanceOf(Foo::class, $shortcode);
+        $this->assertEquals('stubbed foo', $shortcode->render());
 
         $this->assertTrue(shortcode_exists('fooStub'));
     }

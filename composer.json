@@ -29,8 +29,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Fulcrum\\Tests\\Integration\\": "tests/integration/",
-            "Fulcrum\\Tests\\Unit\\": "tests/unit/"
+            "Fulcrum\\Tests\\": "tests/"
         }
     },
     "require": {
@@ -56,13 +55,14 @@
         "wpfulcrum/widget": "self.version"
     },
     "config": {
-        "sort-order": true
+        "sort-order": true,
+        "vendor-dir": "assets/vendor"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
-        "phpcs": "\"vendor/bin/phpcs\"",
-        "test-unit": "\"vendor/bin/phpunit\" --testsuite unit",
-        "test-integration": "\"vendor/bin/phpunit\" --testsuite integration --configuration tests/integration/phpunit.xml.dist"
+        "phpcs": "\"assets/vendor/bin/phpcs\"",
+        "test-unit": "\"assets/vendor/bin/phpunit\" --testsuite unit",
+        "test-integration": "\"assets/vendor/bin/phpunit\" --testsuite integration --configuration tests/Integration/phpunit.xml.dist"
     }
 }

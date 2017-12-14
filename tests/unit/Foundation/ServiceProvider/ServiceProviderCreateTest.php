@@ -56,7 +56,7 @@ class ServiceProviderCreateTest extends UnitTestCase
     {
         Functions\when('__')->justReturn('');
         $stub = new FooProviderStub($this->fulcrumMock);
-        $path = dirname(__DIR__) . '/Stubs/fixtures/foo-defaults.php';
+        $path = FULCRUM_TESTS_DIR . '/Foundation/Stubs/fixtures/foo-defaults.php';
 
         $this->assertEquals($path, $stub->defaultsLocation);
         $this->assertEquals([

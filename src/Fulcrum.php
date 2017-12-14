@@ -2,7 +2,9 @@
 
 namespace Fulcrum;
 
-fulcrum_prevent_direct_file_access();
+if (!defined('ABSPATH')) {
+    wp_die("Oh, silly, there's nothing to see here.");
+}
 
 use Fulcrum\Config\ConfigContract;
 use Fulcrum\Container\DIContainer;
@@ -75,9 +77,24 @@ class Fulcrum extends DIContainer implements FulcrumContract
         $this['fulcrum']                     = self::$fulcrum = $this;
         $this['isFlushRewriteRulesRequired'] = false;
 
+        $this->loadInitialParameters($config);
         $this->initHandlers();
         $this->initServiceProviders();
         $this->initEvents();
+    }
+
+    public function loadInitialParameters(ConfigContract $config)
+    {
+        if (!$config->isArray('initialParameters')) {
+            return;
+        }
+
+        array_walk(
+            $config->initialParameters,
+            function ($value, $uniqueId) {
+                $this[$uniqueId] = $value;
+            }
+        );
     }
 
     protected function initHandlers()

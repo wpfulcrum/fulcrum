@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Custom\PostType\Permalink;
+namespace Fulcrum\Custom\Template;
 
-use Fulcrum\Foundation\ServiceProvider\Provider;
+use Fulcrum\Foundation\ServiceProvider\Provider as BaseProvider;
 
-class PermalinkProvider extends Provider
+class TemplateLoaderProvider extends BaseProvider
 {
     /**
      * Flag to indicate whether to skip the queue and register directly into the Container.
@@ -12,6 +12,13 @@ class PermalinkProvider extends Provider
      * @var bool
      */
     protected $skipQueue = true;
+
+    /**
+     * Specifies where the default file is located.
+     *
+     * @var string
+     */
+    protected $defaultsLocation = 'config/loader-defaults.php';
 
     /**
      * Get the concrete based upon the configuration supplied.
@@ -28,12 +35,8 @@ class PermalinkProvider extends Provider
         return [
             'autoload' => $config['autoload'],
             'concrete' => function () use ($config) {
-                $configObj = $this->instantiateConfig($config);
-
-                return new CustomPermalink(
-                    $configObj,
-                    new PostNameSlug($configObj),
-                    new PermalinkQuery($configObj)
+                return new TemplateLoader(
+                    $this->createConfig($config)
                 );
             },
         ];
@@ -49,8 +52,8 @@ class PermalinkProvider extends Provider
     protected function getConcreteDefaultStructure()
     {
         return [
-            'autoload' => false,
-            'config'   => [],
+            'autoload' => true,
+            'config'   => '',
         ];
     }
 }

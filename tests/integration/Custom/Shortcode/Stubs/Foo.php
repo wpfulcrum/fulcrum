@@ -4,11 +4,11 @@ namespace Fulcrum\Tests\Integration\Custom\Shortcode\Stubs;
 
 use Fulcrum\Custom\Shortcode\Shortcode;
 
-class FooShortcode extends Shortcode
+class Foo extends Shortcode
 {
     public static $concreteConfig = [
         'autoload'  => true,
-        'classname' => __CLASS__,
+        'classname' => 'Fulcrum\Tests\Integration\Custom\Shortcode\Stubs\Foo',
         'config'    => [
             'shortcode' => 'fooStub',
             'noView'    => true,
@@ -18,7 +18,7 @@ class FooShortcode extends Shortcode
         ],
     ];
 
-    protected function render()
+    public function render()
     {
         return 'stubbed foo';
     }

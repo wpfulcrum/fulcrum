@@ -40,6 +40,20 @@ abstract class Addon
     protected $providers = [];
 
     /**
+     * Absolute path to the directory where WordPress installed the plugin.
+     *
+     * @var string
+     */
+    protected static $pluginPath;
+
+    /**
+     * URL to the directory where WordPress installed the plugin.
+     *
+     * @var string
+     */
+    protected static $pluginUrl;
+
+    /**
      * Add-on plugin file.
      *
      * @var string
@@ -67,27 +81,39 @@ abstract class Addon
         return self::MIN_WP_VERSION;
     }
 
+    public static function getPluginPath()
+    {
+        return self::$pluginPath;
+    }
+
+    public static function getPluginUrl()
+    {
+        return self::$pluginUrl;
+    }
+
     /*************************
      * Instantiate & Init
      ************************/
 
     /**
-     * Instantiate the plugin
+     * Instantiate the plugin.
      *
      * @since 3.0.0
      *
-     * @param ConfigContract $config Runtime configuration parameters.
-     * @param string $pluginFile File for the add-on plugin.
-     * @param FulcrumContract $fulcrum Instance of Fulcrum.
+     * @param ConfigContract $config Runtime configuration parameters
+     * @param string $pluginFile File for the add-on plugin
+     * @param FulcrumContract $fulcrum Instance of Fulcrum
      */
     public function __construct(ConfigContract $config, $pluginFile, FulcrumContract $fulcrum = null)
     {
         $this->config     = $config;
+        self::$pluginPath = plugin_dir_path($pluginFile);
+        self::$pluginUrl  = plugin_dir_url($pluginFile);
         $this->pluginFile = plugin_basename($pluginFile);
         $this->fulcrum    = is_null($fulcrum) ? Fulcrum::getFulcrum() : $fulcrum;
 
         $this->initAddon();
-        $this->initParameters();
+        $this->fulcrum->loadInitialParameters($this->config);
         $this->initServiceProviders();
         $this->initAdminServiceProviders();
         $this->registerConcretes();
@@ -95,7 +121,7 @@ abstract class Addon
     }
 
     /**
-     * Add-ons can overload this method for additional functionality
+     * Add-ons can overload this method for additional functionality.
      *
      * @since 3.0.0
      *
@@ -116,27 +142,6 @@ abstract class Addon
     protected function initEvents()
     {
         // it's here if you need it.
-    }
-
-    /**
-     * Initialize the initial parameters by loading each into the Container.
-     *
-     * @since 3.0.0
-     *
-     * @return null
-     */
-    protected function initParameters()
-    {
-        if (!$this->config->isArray('initialParameters')) {
-            return;
-        }
-
-        array_walk(
-            $this->config->initialParameters,
-            function ($value, $uniqueId) {
-                $this->fulcrum[$uniqueId] = $value;
-            }
-        );
     }
 
     /**

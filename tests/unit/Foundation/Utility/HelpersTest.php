@@ -73,10 +73,6 @@ class HelpersTest extends UnitTestCase
             'Fulcrum\Tests\Unit\Foundation\Stubs\FooStub',
             get_calling_class_info($object)->getName()
         );
-        $this->assertSame(
-            dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR . 'FooStub.php',
-            get_calling_class_info($object)->getFileName()
-        );
     }
 
     public function testShouldReturnNullWhenGettingCallingClassDir()
@@ -87,7 +83,7 @@ class HelpersTest extends UnitTestCase
     public function testShouldReturnDirWhenGettingCallingClass()
     {
         $this->assertSame(
-            dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Stubs',
+            FULCRUM_TESTS_DIR . DIRECTORY_SEPARATOR . 'Foundation' . DIRECTORY_SEPARATOR . 'Stubs',
             get_calling_class_directory(new FooStub())
         );
     }
