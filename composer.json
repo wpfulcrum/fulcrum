@@ -55,14 +55,13 @@
         "wpfulcrum/widget": "self.version"
     },
     "config": {
-        "sort-order": true,
-        "vendor-dir": "assets/vendor"
+        "sort-order": true
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
-        "phpcs": "\"assets/vendor/bin/phpcs\"",
-        "test-unit": "\"assets/vendor/bin/phpunit\" --testsuite unit",
-        "test-integration": "\"assets/vendor/bin/phpunit\" --testsuite integration --configuration tests/Integration/phpunit.xml.dist"
+        "phpcs": "\"vendor/bin/phpcs\"",
+        "test-unit": "\"vendor/bin/phpunit\" --testsuite unit",
+        "test-integration": "\"vendor/bin/phpunit\" --testsuite integration --configuration tests/Integration/phpunit.xml.dist"
     }
 }

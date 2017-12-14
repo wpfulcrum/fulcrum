@@ -14,7 +14,7 @@ require_once FULCRUM_TESTS_DIR . DIRECTORY_SEPARATOR .'UnitTestCase.php';
 /**
  * Time to load Composer's autoloader.
  */
-$vendorPath = FULCRUM_ROOT_DIR . 'assets/vendor/';
+$vendorPath = FULCRUM_ROOT_DIR . 'vendor' . DIRECTORY_SEPARATOR;
 if (!file_exists($vendorPath . 'autoload.php')) {
     die('Whoops, we need Composer before we start running tests.  Please type: `composer install`.');
 }
