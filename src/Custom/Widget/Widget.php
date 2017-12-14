@@ -183,6 +183,18 @@ class Widget extends WP_Widget implements WidgetContract
      */
     public function update($newInstance, $oldInstance)
     {
+        if (!is_array($newInstance)) {
+            return $newInstance;
+        }
+
+        foreach (array_keys($this->config->defaults) as $key) {
+            if (!isset($newInstance[$key])) {
+                continue;
+            }
+            $newInstance[$key] = trim($newInstance[$key]);
+            $newInstance[$key] = strip_tags($newInstance[$key]);
+        }
+
         return $newInstance;
     }
 
