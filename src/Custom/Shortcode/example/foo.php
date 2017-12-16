@@ -40,5 +40,10 @@ return [
         'defaults'  => [
             'class' => 'foobar',
         ],
+
+        /**
+         * When set to `true`, the incoming content is processed through {@see do_shortcode()}.
+         */
+        'doShortcodeWithinContent' => false,
     ],
 ];

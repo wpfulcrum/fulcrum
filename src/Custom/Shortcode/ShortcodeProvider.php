@@ -12,7 +12,7 @@ class ShortcodeProvider extends Provider
      *
      * @var bool
      */
-    protected $hasDefaults = false;
+    protected $hasDefaults = true;
 
     /**
      * Flag to indicate whether to skip the queue and register directly into the Container.
@@ -36,7 +36,7 @@ class ShortcodeProvider extends Provider
     /**
      * Get the concrete based upon the configuration supplied.
      *
-     * @since 3.0.0
+     * @since 3.0.2
      *
      * @param array $config Runtime configuration parameters.
      * @param string $uniqueId Container's unique key ID for this instance.
@@ -50,9 +50,7 @@ class ShortcodeProvider extends Provider
             'concrete' => function () use ($config) {
                 $class = $this->getShortcodeClass($config);
 
-                return new $class(
-                    ConfigFactory::create($config['config'])
-                );
+                return new $class($this->createConfig($config));
             },
         ];
     }

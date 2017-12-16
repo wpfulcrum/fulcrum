@@ -42,13 +42,26 @@ class Shortcode implements ShortcodeContract
 
         $this->config = $config;
         add_shortcode($this->config->shortcode, [$this, 'renderCallback']);
+        $this->initShortcode();
+    }
+
+    /**
+     * Extendable for initializing the shortcode upon instantiation.
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    protected function initShortcode()
+    {
+        // available for the extending child class.
     }
 
     /**
      * Shortcode callback which merges the attributes, calls the render() method to build
      * the HTML, and then returns it.
      *
-     * @since 3.0.0
+     * @since 3.0.2
      *
      * @param array|string $attributes Shortcode attributes
      * @param string|null $content Content between the opening & closing shortcode declarations
@@ -62,7 +75,9 @@ class Shortcode implements ShortcodeContract
         }
 
         $this->attributes = shortcode_atts($this->config->defaults, $attributes, $this->config->shortcode);
-        $this->content    = $content;
+        $this->content    = $this->config->doShortcodeWithinContent
+            ? do_shortcode($this->content)
+            : $content;
 
         return $this->render();
     }
