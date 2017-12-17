@@ -124,4 +124,19 @@ class ContainerRegisterConcreteTest extends UnitTestCase
         $this->assertInstanceOf('stdClass', $foo);
         $this->assertEquals('some value', $foo->bar);
     }
+
+    public function testShouldPassContainerToConcrete()
+    {
+        $container = new DIContainer();
+
+        $concreteConfig = [
+            'autoload' => true,
+            'concrete' => function ($container) {
+                return $container;
+            },
+        ];
+
+        $foo = $container->registerConcrete($concreteConfig, 'foo');
+        $this->assertInstanceOf('Fulcrum\Container\DIContainer', $foo);
+    }
 }

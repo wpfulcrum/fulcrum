@@ -7,9 +7,10 @@ if (!defined('ABSPATH')) {
 }
 
 use Fulcrum\Config\ConfigContract;
+use Fulcrum\Container\ContainerContract;
 use Fulcrum\Container\DIContainer;
 
-class Fulcrum extends DIContainer implements FulcrumContract
+class Fulcrum extends DIContainer implements FulcrumContract, ContainerContract
 {
     /**
      * The plugin's version.
