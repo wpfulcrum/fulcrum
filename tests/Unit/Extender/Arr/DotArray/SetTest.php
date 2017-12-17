@@ -181,4 +181,25 @@ class SetTest extends UnitTestCase
 
         $this->assertEquals($expected, $this->tom);
     }
+
+    public function testShouldCreateElement()
+    {
+        $items = ['foo' => []];
+        DotArray::set($items, 'foo.bar', 'Hi there');
+        $this->assertEquals([
+            'foo' => [
+                'bar' => 'Hi there',
+            ],
+        ], $items);
+
+        $items = ['foo' => []];
+        DotArray::set($items, 'foo.bar.baz', 'Hello World');
+        $this->assertEquals([
+            'foo' => [
+                'bar' => [
+                    'baz' => 'Hello World',
+                ],
+            ],
+        ], $items);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Fulcrum\Container;
 
+use Fulcrum\Extender\Arr\DotArray;
 use Pimple\Container as Pimple;
 
 class DIContainer extends Pimple implements ContainerContract
@@ -39,7 +40,7 @@ class DIContainer extends Pimple implements ContainerContract
     /**
      * Get the Core Instance
      *
-     * @since 1.1.0
+     * @since 3.0.0
      *
      * @return self
      */
@@ -52,15 +53,22 @@ class DIContainer extends Pimple implements ContainerContract
      * Gets a parameter or an object.
      *
      * @since 3.0.0
+     * @since 3.0.3 "dot" notation
      *
      * @param string $uniqueId The unique identifier for the parameter or object
+     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
      *
      * @return mixed The value of the parameter or an object
      *
      * @throws \InvalidArgumentException if the identifier is not defined
      */
-    public function get($uniqueId)
+    public function get($uniqueId, $itemKeys = null)
     {
+        // If there are itemKeys, then get deeply and return.
+        if (!empty($itemKeys) && is_string($itemKeys)) {
+            return DotArray::get($this->offsetGet($uniqueId), $itemKeys);
+        }
+
         return $this->offsetGet($uniqueId);
     }
 
@@ -68,14 +76,23 @@ class DIContainer extends Pimple implements ContainerContract
      * Checks if a parameter or an object is set.
      *
      * @since 3.0.0
+     * @since 3.0.3 "dot" notation
      *
      * @param  string $uniqueId The unique identifier for the parameter or object
+     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
      *
      * @return bool
      */
-    public function has($uniqueId)
+    public function has($uniqueId, $itemKeys = null)
     {
-        return $this->offsetExists($uniqueId);
+        $hasUniqueId = $this->offsetExists($uniqueId);
+
+        // If there are itemKeys, check deeply.
+        if (!empty($itemKeys) && is_string($itemKeys)) {
+            return DotArray::has($this->get($uniqueId), $itemKeys);
+        }
+
+        return $hasUniqueId;
     }
 
     /**
@@ -102,5 +119,49 @@ class DIContainer extends Pimple implements ContainerContract
         if (true === $config['autoload']) {
             return $this[$uniqueId];
         }
+    }
+
+    /**
+     * Stores data or callable in the container.
+     *
+     * @since 3.0.3
+     *
+     * @param string $uniqueId The unique identifier for this item in the Container.
+     * @param mixed $stuffToBeStored Stuff to be stored.
+     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
+     *
+     * @return bool
+     */
+    public function store($uniqueId, $stuffToBeStored, $itemKeys = null)
+    {
+        // If there are no itemKeys, then set the value.
+        if (!empty($itemKeys) && is_string($itemKeys)) {
+            return $this->storeByDotNotation($uniqueId, $itemKeys, $stuffToBeStored);
+        }
+        $this->offsetSet($uniqueId, $stuffToBeStored);
+        return true;
+    }
+
+    /**
+     * Store by dot notation.
+     *
+     * @since 3.0.3
+     *
+     * @param string $uniqueId The unique identifier for this item in the Container.
+     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
+     * @param mixed $stuffToBeStored Stuff to be stored.
+     *
+     * @return bool
+     */
+    private function storeByDotNotation($uniqueId, $itemKeys, $stuffToBeStored)
+    {
+        $items = $this->has($uniqueId) ? $this->get($uniqueId) : [];
+        if (!is_array($items)) {
+            return false;
+        }
+
+        DotArray::set($items, $itemKeys, $stuffToBeStored);
+        $this->offsetSet($uniqueId, $items);
+        return true;
     }
 }
