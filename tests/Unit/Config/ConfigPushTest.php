@@ -19,7 +19,6 @@ class ConfigPushTest extends ConfigTestCase
         $this->assertEquals('abcd', $config->array[2]);
         $this->assertEquals('abcd', $config->get('array.2'));
 
-
         $array = $config->foo;
         $config->push('foo', 'xyz');
 
