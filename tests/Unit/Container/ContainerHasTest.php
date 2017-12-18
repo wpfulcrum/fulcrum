@@ -38,7 +38,7 @@ class ContainerHasTest extends UnitTestCase
         $this->assertTrue($container->has('some_array'));
     }
 
-    public function testContainerShouldNotValues()
+    public function testContainerShouldNotFindValues()
     {
         $initialParameters = [
             'foo' => 'Hello World',
@@ -71,6 +71,11 @@ class ContainerHasTest extends UnitTestCase
                 'baz' => 'Fulcrum',
             ],
         ]);
+
+        // Test for Issue #1.
+        $this->assertFalse($container->has('bar', 'baz'));
+        $this->assertFalse($container->has('bar', 'bar.baz'));
+        $this->assertFalse($container->has('doesnotexist', 'bar.baz'));
 
         $this->assertTrue($container->has('foo', 'baz'));
         $this->assertTrue($container->has('foo', 'bar'));
