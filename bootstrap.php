@@ -29,7 +29,10 @@ if (!defined('ABSPATH')) {
     exit('Cheatin&#8217; uh?');
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+// Don't load this file if we're in an integration test mode.
+if (!class_exists('WP_UnitTestCase')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
 
 fulcrum_declare_plugin_constants('FULCRUM', __FILE__);
 
