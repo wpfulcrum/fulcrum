@@ -54,9 +54,10 @@ class DIContainer extends Pimple implements ContainerContract
      *
      * @since 3.0.0
      * @since 3.0.3 "dot" notation
+     * @since 3.0.5 Type cast $itemsKeys to string.
      *
      * @param string $uniqueId The unique identifier for the parameter or object
-     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
+     * @param string|int|null $itemKeys Keys within the item, which can be "dot" notation.
      *
      * @return mixed The value of the parameter or an object
      *
@@ -65,8 +66,8 @@ class DIContainer extends Pimple implements ContainerContract
     public function get($uniqueId, $itemKeys = null)
     {
         // If there are itemKeys, then get deeply and return.
-        if (!empty($itemKeys) && is_string($itemKeys)) {
-            return DotArray::get($this->offsetGet($uniqueId), $itemKeys);
+        if (Validator::validItemKeys($uniqueId, $itemKeys)) {
+            return DotArray::get($this->offsetGet($uniqueId), (string) $itemKeys);
         }
 
         return $this->offsetGet($uniqueId);
@@ -78,9 +79,10 @@ class DIContainer extends Pimple implements ContainerContract
      * @since 3.0.0
      * @since 3.0.3 "dot" notation
      * @since 3.0.4 Issue #1
+     * @since 3.0.5 Type cast $itemsKeys to string.
      *
-     * @param  string $uniqueId The unique identifier for the parameter or object
-     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
+     * @param string $uniqueId The unique identifier for the parameter or object
+     * @param string|int|null $itemKeys Keys within the item, which can be "dot" notation.
      *
      * @return bool
      */
@@ -91,9 +93,9 @@ class DIContainer extends Pimple implements ContainerContract
             return false;
         }
 
-        // If there are itemKeys, check deeply.
-        if (!empty($itemKeys) && is_string($itemKeys)) {
-            return DotArray::has($this->get($uniqueId), $itemKeys);
+        // If there are itemKeys, then get deeply and return.
+        if (Validator::validItemKeys($uniqueId, $itemKeys)) {
+            return DotArray::has($this->get($uniqueId), (string) $itemKeys);
         }
 
         return $hasUniqueId;
@@ -129,19 +131,21 @@ class DIContainer extends Pimple implements ContainerContract
      * Stores data or callable in the container.
      *
      * @since 3.0.3
+     * @since 3.0.5 Type cast $itemsKeys to string.
      *
      * @param string $uniqueId The unique identifier for this item in the Container.
      * @param mixed $stuffToBeStored Stuff to be stored.
-     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
+     * @param string|int|null $itemKeys Keys within the item, which can be "dot" notation.
      *
      * @return bool
      */
     public function store($uniqueId, $stuffToBeStored, $itemKeys = null)
     {
         // If there are no itemKeys, then set the value.
-        if (!empty($itemKeys) && is_string($itemKeys)) {
-            return $this->storeByDotNotation($uniqueId, $itemKeys, $stuffToBeStored);
+        if (Validator::validItemKeys($uniqueId, $itemKeys)) {
+            return $this->storeByDotNotation($uniqueId, (string) $itemKeys, $stuffToBeStored);
         }
+
         $this->offsetSet($uniqueId, $stuffToBeStored);
         return true;
     }
@@ -152,7 +156,7 @@ class DIContainer extends Pimple implements ContainerContract
      * @since 3.0.3
      *
      * @param string $uniqueId The unique identifier for this item in the Container.
-     * @param string|null $itemKeys Keys within the item, which can be "dot" notation.
+     * @param string $itemKeys Keys within the item, which can be "dot" notation.
      * @param mixed $stuffToBeStored Stuff to be stored.
      *
      * @return bool
