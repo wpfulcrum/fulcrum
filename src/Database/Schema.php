@@ -257,7 +257,8 @@ class Schema
 				SELECT option_value
 				FROM {$wpdb->prefix}options
 				WHERE option_name = %s
-			", $this->optionName
+			",
+            $this->optionName
         );
 
         return $wpdb->get_var($sqlQuery);
