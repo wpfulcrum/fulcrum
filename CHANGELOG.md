@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+3.0.4
+- Added Container module 3.0.5.
+- Added the mu-loader assets.
+
 3.0.3
 - Adding Container module 3.0.4, which fixes an issue with `has()` method.
 

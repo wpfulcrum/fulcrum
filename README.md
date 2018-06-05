@@ -45,11 +45,11 @@ To install it as a must use, here's what you want to do:
 
 1. Open your project and navigate to `wp-content/mu-plugins`.
 2. Then open terminal (or console).
-3. Then type: `git clone https://github.com/hellfromtonya/Fulcrum.git`.
-4. Change the directory by typing: `cd Fulcrum` or `cd fulcrum`.
-5. Next you need to run Composer to install all of the assets. Type `composer install` at the root of the Fulcrum folder.
-6. Next you need an autolauncher to load Fulcrum.  If one exists already, then add `include( 'fulcrum/bootstrap.php' );` into it.  Otherwise, do the following:
-    * Navigate to `fulcrum/mu-loader/` and copy the file `mu_autoloader.php`
+3. Then type: `git clone https://github.com/hellfromtonya/Fulcrum.git fulcrum`.
+4. Change the directory by typing: `cd fulcrum`.
+5. Next, run Composer to install all of the assets. Type `composer install` at the root of the Fulcrum folder.
+6. Next, add an auto-launcher to load Fulcrum.  If one exists already, then add `require __DIR__ . '/fulcrum/bootstrap.php';` into it.  Otherwise, do the following:
+    * Navigate to `fulcrum/mu-loader/` and copy the `mu-autoloader.php` file.
     * Paste it into the root of `wp-content/mu-plugins`.
     * Bam, Fulcrum now loads itself up without you or your client needing to activate it.  WooHoo!
 

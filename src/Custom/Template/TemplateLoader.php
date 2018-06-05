@@ -46,7 +46,7 @@ class TemplateLoader
     /**
      * Pass back the template file to the front-end loader.
      *
-     * @since 3.0.0
+     * @since 3.0.1
      *
      * @param string $template
      *
@@ -54,11 +54,6 @@ class TemplateLoader
      */
     public function includeTemplate($template)
     {
-        // If this template is a "index.php" file, just return it.
-        if (str_ends_with($template, 'index.php')) {
-            return $template;
-        }
-
         if (is_tax()) {
             return $this->getTaxTemplate($template);
         }

@@ -61,7 +61,7 @@ class Shortcode implements ShortcodeContract
      * Shortcode callback which merges the attributes, calls the render() method to build
      * the HTML, and then returns it.
      *
-     * @since 3.0.2
+     * @since 3.0.3
      *
      * @param array|string $attributes Shortcode attributes
      * @param string|null $content Content between the opening & closing shortcode declarations
@@ -76,7 +76,7 @@ class Shortcode implements ShortcodeContract
 
         $this->attributes = shortcode_atts($this->config->defaults, $attributes, $this->config->shortcode);
         $this->content    = $this->config->doShortcodeWithinContent
-            ? do_shortcode($this->content)
+            ? do_shortcode($content)
             : $content;
 
         return $this->render();
